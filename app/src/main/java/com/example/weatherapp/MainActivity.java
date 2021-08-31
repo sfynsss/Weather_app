@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -44,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
     Spinner city_list;
     TextView date_time, location, presure, humidity, celcius, description;
     ImageView cloud_image;
+    ImageView image_weather1, image_weather2, image_weather3, image_weather4, image_weather5, image_weather6, image_weather7;
+    TextView day1, day2, day3, day4, day5, day6, day7;
+    TextView temp1, temp2, temp3, temp4, temp5, temp6, temp7;
+    TextView[] temp_;
+    TextView[] day_;
+    ImageView[] image_;
 
     String[] city = {"Gdansk", "Warszawa", "Krakow", "Wroclaw", "Lodz", "Your Current Position"};
     String[] lat = {"54.3521", "52.2298", "50.0833", "51.1", "51.75", ""};
@@ -56,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
     Api api;
     Call<WeatherResponse> getWeather;
     Call<WeatherLocation> getWeatherLocation;
-    DateFormat dateFormat;
-    Date date;
+    DateFormat dateFormat, dateFormat1;
+    Date date, dt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +80,38 @@ public class MainActivity extends AppCompatActivity {
         description = findViewById(R.id.description);
         cloud_image = findViewById(R.id.cloud_image);
 
+        image_weather1 = findViewById(R.id.image_weather1);
+        image_weather2 = findViewById(R.id.image_weather2);
+        image_weather3 = findViewById(R.id.image_weather3);
+        image_weather4 = findViewById(R.id.image_weather4);
+        image_weather5 = findViewById(R.id.image_weather5);
+        image_weather6 = findViewById(R.id.image_weather6);
+        image_weather7 = findViewById(R.id.image_weather7);
+
+        day1 = findViewById(R.id.day1);
+        day2 = findViewById(R.id.day2);
+        day3 = findViewById(R.id.day3);
+        day4 = findViewById(R.id.day4);
+        day5 = findViewById(R.id.day5);
+        day6 = findViewById(R.id.day6);
+        day7 = findViewById(R.id.day7);
+        day_ = new TextView[]{day1, day2, day3, day4, day5, day6, day7};
+
+        temp1 = findViewById(R.id.temp1);
+        temp2 = findViewById(R.id.temp2);
+        temp3 = findViewById(R.id.temp3);
+        temp4 = findViewById(R.id.temp4);
+        temp5 = findViewById(R.id.temp5);
+        temp6 = findViewById(R.id.temp6);
+        temp7 = findViewById(R.id.temp7);
+        temp_ = new TextView[]{temp1, temp2, temp3, temp4, temp5, temp6, temp7};
+
         Locale locale = new Locale("en");
         Locale.setDefault(locale);
         dateFormat = new SimpleDateFormat("EEE, MMMM dd");
+        dateFormat1 = new SimpleDateFormat("EEE");
         date = new Date();
+        dt = new Date();
         date_time.setText(dateFormat.format(date));
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
@@ -196,6 +231,18 @@ public class MainActivity extends AppCompatActivity {
                         cloud_image.setBackgroundResource(R.drawable.mist);
                     } else if (response.body().getDaily().get(0).getWeather().get(0).getMain().equals("Clouds")){
                         cloud_image.setBackgroundResource(R.drawable.broken_clouds);
+                    }
+
+//                    int tmp_dt = 0;
+                    for (int i = 0; i < 7; i++) {
+//                        tmp_dt+=1;
+                        Calendar c = Calendar.getInstance();
+                        c.setTime(dt);
+                        c.add(Calendar.DATE, 1);
+                        dt = c.getTime();
+                        System.out.println(dt);
+                        day_[i].setText(dateFormat1.format(dt));
+                        temp_[i].setText(Math.round(response.body().getDaily().get(i).getTemp().getDay())+"\u00B0");
                     }
                     description.setText(response.body().getDaily().get(0).getWeather().get(0).getDescription());
                     presure.setText(response.body().getDaily().get(0).getPressure()+" hPa.");

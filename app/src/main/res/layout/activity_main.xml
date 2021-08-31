@@ -216,11 +216,13 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <ImageView
+                    android:id="@+id/image_weather1"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/rain"></ImageView>
                 <TextView
+                    android:id="@+id/day1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15dp"
@@ -230,6 +232,7 @@
                     android:fontFamily="@font/raleway"
                     android:textColor="@color/white"/>
                 <TextView
+                    android:id="@+id/temp1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -245,11 +248,13 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <ImageView
+                    android:id="@+id/image_weather2"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/rain"></ImageView>
                 <TextView
+                    android:id="@+id/day2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15dp"
@@ -259,6 +264,7 @@
                     android:fontFamily="@font/raleway"
                     android:textColor="@color/white"/>
                 <TextView
+                    android:id="@+id/temp2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -274,11 +280,13 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <ImageView
+                    android:id="@+id/image_weather3"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/rain"></ImageView>
                 <TextView
+                    android:id="@+id/day3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15dp"
@@ -288,6 +296,7 @@
                     android:fontFamily="@font/raleway"
                     android:textColor="@color/white"/>
                 <TextView
+                    android:id="@+id/temp3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -303,11 +312,13 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <ImageView
+                    android:id="@+id/image_weather4"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/rain"></ImageView>
                 <TextView
+                    android:id="@+id/day4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15dp"
@@ -317,6 +328,7 @@
                     android:fontFamily="@font/raleway"
                     android:textColor="@color/white"/>
                 <TextView
+                    android:id="@+id/temp4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -332,11 +344,13 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <ImageView
+                    android:id="@+id/image_weather5"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/rain"></ImageView>
                 <TextView
+                    android:id="@+id/day5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15dp"
@@ -346,6 +360,7 @@
                     android:fontFamily="@font/raleway"
                     android:textColor="@color/white"/>
                 <TextView
+                    android:id="@+id/temp5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -361,11 +376,13 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <ImageView
+                    android:id="@+id/image_weather6"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/rain"></ImageView>
                 <TextView
+                    android:id="@+id/day6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15dp"
@@ -375,6 +392,7 @@
                     android:fontFamily="@font/raleway"
                     android:textColor="@color/white"/>
                 <TextView
+                    android:id="@+id/temp6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -390,11 +408,13 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <ImageView
+                    android:id="@+id/image_weather7"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/rain"></ImageView>
                 <TextView
+                    android:id="@+id/day7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15dp"
@@ -404,6 +424,7 @@
                     android:fontFamily="@font/raleway"
                     android:textColor="@color/white"/>
                 <TextView
+                    android:id="@+id/temp7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
