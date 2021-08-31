@@ -30,6 +30,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     Api api;
     Call<WeatherResponse> getWeather;
     Call<WeatherLocation> getWeatherLocation;
+    DateFormat dateFormat;
+    Date date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
         celcius = findViewById(R.id.celcius);
         description = findViewById(R.id.description);
         cloud_image = findViewById(R.id.cloud_image);
+
+        dateFormat = new SimpleDateFormat("EEE, MMMM dd");
+        date = new Date();
+        date_time.setText(dateFormat.format(date));
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
         api = RetrofitClient.createService(Api.class);
