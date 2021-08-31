@@ -181,6 +181,8 @@ public class MainActivity extends AppCompatActivity {
                         cloud_image.setBackgroundResource(R.drawable.snow);
                     } else if (response.body().getDaily().get(0).getWeather().get(0).getMain().equals("Mist")){
                         cloud_image.setBackgroundResource(R.drawable.mist);
+                    } else if (response.body().getDaily().get(0).getWeather().get(0).getMain().equals("Clouds")){
+                        cloud_image.setBackgroundResource(R.drawable.broken_clouds);
                     }
                     description.setText(response.body().getDaily().get(0).getWeather().get(0).getDescription());
                     presure.setText(response.body().getDaily().get(0).getPressure()+" hPa.");
