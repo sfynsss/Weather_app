@@ -17,6 +17,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +37,8 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     Spinner city_list;
-    TextView date_time, location, presure, humidity;
+    TextView date_time, location, presure, humidity, celcius, description;
+    ImageView cloud_image;
 
     String[] city = {"Gdansk", "Warszawa", "Krakow", "Wroclaw", "Lodz", "Your Current Position"};
     String[] lat = {"54.3521", "52.2298", "50.0833", "51.1", "51.75", ""};
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     Api api;
     Call<WeatherResponse> getWeather;
+    Call<WeatherLocation> getWeatherLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
         location = findViewById(R.id.location);
         presure = findViewById(R.id.presure);
         humidity = findViewById(R.id.humidity);
+        celcius = findViewById(R.id.celcius);
+        description = findViewById(R.id.description);
+        cloud_image = findViewById(R.id.cloud_image);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
         api = RetrofitClient.createService(Api.class);
@@ -73,28 +79,12 @@ public class MainActivity extends AppCompatActivity {
                 if (i == 5) {
                     if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                             && ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED ){
-                        getCurrentLocation();
+                        getCurrentLocation(5);
                     } else {
                         ActivityCompat.requestPermissions(MainActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
                     }
                 } else {
-                    System.out.println(lat[i]+" | "+lon[i]);
-                    getWeather = api.getWeather(lat[i]+"", lon[i]+"", appid+"");
-                    getWeather.enqueue(new Callback<WeatherResponse>() {
-                        @Override
-                        public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
-                            if (response.isSuccessful()) {
-
-                            } else {
-                                Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<WeatherResponse> call, Throwable t) {
-                            Toast.makeText(MainActivity.this, "Error "+t.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    getWeatherData(lat[i], lon[i], i);
                 }
             }
 
@@ -109,14 +99,14 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 100 && grantResults.length > 0 && (grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
-            getCurrentLocation();
+            getCurrentLocation(5);
         } else {
             Toast.makeText(getApplicationContext(), "Permisson Dennied.", Toast.LENGTH_SHORT);
         }
     }
 
     @SuppressLint("MissingPermission")
-    private void getCurrentLocation() {
+    private void getCurrentLocation(int pos) {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
@@ -124,9 +114,9 @@ public class MainActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Location> task) {
                     final Location location = task.getResult();
                     if (location != null){
-                        lat[5] = String.valueOf(location.getLatitude());
-                        lon[5] = String.valueOf(location.getLongitude());
-
+                        String tmp_lat = String.valueOf(location.getLatitude());
+                        String tmp_lon = String.valueOf(location.getLongitude());
+                        getWeatherData(tmp_lat, tmp_lon, pos);
                     } else {
                         @SuppressLint("RestrictedApi") LocationRequest locationRequest = new LocationRequest()
                                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -139,8 +129,9 @@ public class MainActivity extends AppCompatActivity {
                             public void onLocationResult(LocationResult locationResult) {
                                 super.onLocationResult(locationResult);
                                 Location location1 = locationResult.getLastLocation();
-                                lat[5] = String.valueOf(location1.getLatitude());
-                                lon[5] = String.valueOf(location1.getLongitude());
+                                String tmp_lat = String.valueOf(location1.getLatitude());
+                                String tmp_lon = String.valueOf(location1.getLongitude());
+                                getWeatherData(tmp_lat, tmp_lon, pos);
                             }
                         };
                         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
@@ -151,5 +142,59 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         }
+    }
+
+    public void getWeatherData(String lat, String lon, int pos) {
+        getWeather = api.getWeather(lat, lon, appid+"");
+        getWeather.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+                if (response.isSuccessful()) {
+                    if (pos != 5) {
+                        location.setText(city[pos]+", Poland");
+                        System.out.println(response.body().getTimezone());
+                    } else {
+                        getWeatherLocation = api.getWeatherLocation(lat, lon, appid+"");
+                        getWeatherLocation.enqueue(new Callback<WeatherLocation>() {
+                            @Override
+                            public void onResponse(Call<WeatherLocation> call, Response<WeatherLocation> response) {
+                                if (response.isSuccessful()) {
+                                    location.setText(response.body().getName()+", "+response.body().getSys().getCountry());
+                                } else {
+                                    System.out.println("Get Weather Location Error ");
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<WeatherLocation> call, Throwable t) {
+                                System.out.println("Get Weather Location Error "+t.getMessage());
+                            }
+                        });
+                    }
+                    if (response.body().getDaily().get(0).getWeather().get(0).getMain().equals("Thunderstorm")) {
+                        cloud_image.setBackgroundResource(R.drawable.thunderstorm);
+                    } else if (response.body().getDaily().get(0).getWeather().get(0).getMain().equals("Drizzle")){
+                        cloud_image.setBackgroundResource(R.drawable.shower_rain);
+                    } else if (response.body().getDaily().get(0).getWeather().get(0).getMain().equals("Rain")){
+                        cloud_image.setBackgroundResource(R.drawable.rain);
+                    } else if (response.body().getDaily().get(0).getWeather().get(0).getMain().equals("Snow")){
+                        cloud_image.setBackgroundResource(R.drawable.snow);
+                    } else if (response.body().getDaily().get(0).getWeather().get(0).getMain().equals("Mist")){
+                        cloud_image.setBackgroundResource(R.drawable.mist);
+                    }
+                    description.setText(response.body().getDaily().get(0).getWeather().get(0).getDescription());
+                    presure.setText(response.body().getDaily().get(0).getPressure()+" hPa.");
+                    humidity.setText(response.body().getDaily().get(0).getHumidity()+"%");
+                    celcius.setText(Math.round(response.body().getDaily().get(0).getTemp().getDay())+"\u00B0");
+                } else {
+                    Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Error "+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
