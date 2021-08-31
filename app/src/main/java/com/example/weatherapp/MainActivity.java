@@ -33,6 +33,7 @@ import com.google.android.gms.tasks.Task;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -72,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         description = findViewById(R.id.description);
         cloud_image = findViewById(R.id.cloud_image);
 
+        Locale locale = new Locale("en");
+        Locale.setDefault(locale);
         dateFormat = new SimpleDateFormat("EEE, MMMM dd");
         date = new Date();
         date_time.setText(dateFormat.format(date));
